@@ -39,12 +39,18 @@
 ;; =>(2 2 2 2 2 2 2 3 3 5 7)
 
 
-(defn factors-from [lower number]
+(defn factors-from
+  [lower number]
   (cond (= number 1) []
-        (= (mod number lower) 0) (cons lower (factors-from lower
+        (zero? (rem number lower)) (cons lower (factors-from lower
                                                            (/ number lower)))
         :else (recur (inc lower) number)))
 
 (time (reduce max (factors-from 2 600851475143)))
-;; "Elapsed time: 34.39362 msecs"
+;; "Elapsed time: 5.372192 msecs"
 ;; 6857
+
+;; note: factors-from has two different recursion constructs - recur and 
+;;       calling itself by name.  The recur is in the tail-position, the other
+;;       is not.  I'm not excited about this syntax but recur seems to be 
+;;       pretty slow, especially with loop/recur.
